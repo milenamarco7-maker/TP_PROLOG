@@ -1,0 +1,110 @@
+TRATAMIENTO DE LISTAS
+
+EJERCICIO 7
+predecesor([], []).
+predecesor([X|T], [X|R]) :-
+    predAux(X, T, R).
+
+predAux(_, [], []).
+predAux(Ant, [X|T], [X|R]) :-
+    X >= Ant,
+    predAux(X, T, R).
+predAux(Ant, [X|T], R) :-
+    X < Ant,
+    predAux(X, T, R).
+
+EJERCICIO 8 
+rotada(L, 0, P).
+rotada([], N, []):-
+    N > 0,
+rotada([H|T], N, P).
+    N > 0
+    N1 is N - 1,
+    append(T, [H], L2),
+    rotada(L2, N1, P).
+
+EJERCICIO 9
+suma(0, []).
+suma(S, [H|T]):-
+    suma(S1, T),
+    S is S1 + H.
+
+EJERCICIO 10
+cantidad([], 0).
+cantidad([_|T], N):-
+    cantidad(T, N1),
+    N is N1 + 1.
+
+EJERCICIO 11
+ultimo([U], U).
+ultimo([_|T], U) :-
+    ultimo(T, U).
+
+EJERCICIO 12
+inversa(L, I) :-
+    invAc(L, [], I).
+
+invAc([], A, A).
+invAc([H|T], A, I) :-
+    invAc(T, [H|A], I).
+
+EJERCICIO 13
+sacar(1, [_, T], T).
+sacar(P, [H|T], [H|R]) :-
+    P > 1,
+    P1 is P - 1,
+    sacar(P1, T, R).
+
+EJERCICIO 14
+eliminar([E|T], E, T).
+eliminar([H|T], E, [H|R]) :-
+    H \= E,
+    eliminarUno(T, E, R).
+
+EJERCICIO 15
+eliminar([], _, []).
+eliminar([E|T], E, R) :-
+    eliminar(T, E, R).
+eliminar([H|T], E, [H|R]) :-
+    H \= E,
+    eliminar(T, E, R).
+
+EJERCICIO 16
+intersec([], _, []).
+intersec([H|T], L2, [H|R]) :-
+    member(H, L2),
+    intersec(T, L2, R).
+intersec([H|T], L2, R) :-
+    \+ member(H, L2),
+    intersec(T, L2, R).
+
+EJERCICIO 17
+rotarIzq([], _, []).
+rotarIzq(L, N, R) :-
+    L = [_|_],
+    length(L, Len),
+    K is N mod Len,
+    length(Pre, K),
+    append(Pre, Suf, L),
+    append(Suf, Pre, R).
+
+EJERCICIO 18
+insertarEn(E, L, 1, [E|L]).
+insertarEn(E, [H|T], P, [H|R]) :-
+    P > 1,
+    P1 is P - 1,
+    insertarEn(E, T, P1, R).
+
+EJERCICIO 19
+insOrden(E, [], [E]).
+insOrden(E, [H|T], [E,H|T]) :-
+    E =< H.
+insOrden(E, [H|T], [H|R]) :-
+    E > H,
+    insOrden(E, T, R).
+
+EJERCICIO 20
+ordenada([], []).
+ordenada([H|T], O) :-
+    ordenada(T, OT),
+    insOrden(H, OT, O).

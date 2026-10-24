@@ -1,0 +1,126 @@
+ESTRUCTURAS DE DATOS
+EJERCICIO 21
+R = Renzo  A = Ana  B = Bruno  C = Carla  D = Dario  E = Enzo  F = Florencia
+G = Gabriela  H = Hugo  I = Ines  J = Juan  K = Kiara
+
+padre_de(persona(Renzo, 111111, 78), persona(Ana, 222222, 55)).
+padre_de(persona(Renzo, 111111, 78), persona(Bruno, 333333, 52)).
+padre_de(persona(Renzo, 111111, 78), persona(Carla, 444444, 49)).
+padre_de(persona(Ana, 222222, 55), persona(Dario, 555555, 30)).
+padre_de(persona(Ana, 222222, 55), persona(Enzo, 666666, 28)).
+padre_de(persona(Enzo, 666666, 28), persona(Hugo, 777777, 6)).
+padre_de(persona(Bruno, 333333, 52), persona(Florencia, 888888, 27)).
+padre_de(persona(Bruno, 333333, 52), persona(Gabriela, 999999, 25)).
+padre_de(persona(Florencia, 888888, 27), persona(Ines, 121212, 4)).
+padre_de(persona(Florencia, 888888, 27), persona(Juan, 131313, 3)).
+padre_de(persona(Gabriela, 999999, 25), persona(Kiara, 141414, 2)).
+
+descendiente(D, N) :- padre_de(N, D).
+descendiente(D, N) :- padre_de(N, X), descendiente(D, X).
+ 
+ascendiente(A, N) :- padre_de(A, N).
+ascendiente(A, N) :- padre_de(P, N), ascendiente(A, P).
+ 
+mostrar_descendientes(N) :-
+    forall(descendiente(persona(Nom, _, _), N), (write(Nom), nl)).
+mostrar_ascendientes(N) :-
+    forall(ascendiente(persona(Nom, _, _), N), (write(Nom), nl)).
+
+EJERCICIO 22
+parejas([], [], []).
+parejas([X|T1], [Y|T2], [(X,Y)|T3]) :-
+    parejas(T1, T2, T3).
+
+EJERCICIO 23
+persona(ana,   4251111, f, 34).
+persona(luis,  4252222, m, 36).
+persona(marta, 4253333, f, 19).
+persona(pedro, 4254444, m, 20).
+
+casado(ana, luis).
+visita(luis, pedro).
+
+%Buscar si una persona existe
+existe(N) :- persona(N, _, _, _).
+
+%Mostrar todas las personas
+mostrar_todas :- 
+    forall(persona(N, T, S, E), (write(persona(N, T, S, E)), nl)).
+
+%Mostrar solo a las mujeres
+mostrar_mujeres :- 
+    forall(persona(N, _, f, _), (write(N), nl)).
+
+%Mostrar todos los varones mayores de 21 años. 
+mostrar_varones_mayores :- 
+    forall((persona(N, _, m, E), E > 21), (write(N), nl)).
+
+%Definir la relación casado con teléfono. 
+casado_con_tel(X, Y, Tel) :- 
+    casado(X, Y), 
+    persona(Y, Tel, _, _).
+
+%Mostrar los casados
+mostrar_casados :- 
+    forall((casado(X, Y), X @< Y), (write(X-Y), nl)).
+
+%Indicar para sirve: c(X) if casado(X, Y), visita(Y, Z), persona(Z, _, m).
+c(X) :- 
+    casado(X, Y), 
+    visita(Y, Z), 
+    persona(Z, _, m, _).
+
+EJERCICIO 24
+ruta(mendoza,  san_juan,     160).
+ruta(mendoza,  san_luis,     280).
+ruta(san_juan, cordoba,      480).
+ruta(san_luis, buenos_aires, 710).
+ruta(cordoba,  buenos_aires, 540).
+ruta(cordoba,  misiones,     950).
+ruta(cordoba,  san_luis,     350).
+ruta(cordoba,  santa_fe,     280).
+ruta(misiones, santa_fe,     570).
+
+camino(O, D, Ruta, Dist) :-
+    caminoAux(O, D, [O], RutaInv, Dist),
+    reverse(RutaInv, Ruta).
+
+caminoAux(D, D, Visitadas, Visitadas, 0).
+caminoAux(O, D, Visitadas, Ruta, Dist) :-
+    ruta(O, X, Km),
+    \+ member(X, Visitadas),
+    caminoAux(X, D, [X|Visitadas], Ruta, Dist1),
+    Dist is Km + Dist1.
+
+existeCamino(O, D) :-
+    (   once(camino(O, D, _, _))
+    ->  format('Sí existe camino de ~w a ~w~n', [O, D])
+    ;   format('No existe camino de ~w a ~w~n', [O, D])
+    ).
+
+distancia(O, D, Dist) :-
+    camino(O, D, _, Dist).
+
+distanciaMinima(O, D, Min) :-
+    findall(Dist, camino(O, D, _, Dist), Distancias),
+    Distancias \= [],
+    min_list(Distancias, Min).
+
+buscarCamino(O, D) :-
+    write(O),
+    buscarAux(O, D, [O]).
+buscarCamino(O, D) :-
+    \+ camino(O, D, _, _),
+    nl,
+    format('No hay camino de ~w a ~w~n', [O, D]),
+    fail.
+
+buscarAux(D, D, _) :-
+    nl.
+buscarAux(O, D, Visitadas) :-
+    O \= D,
+    ruta(O, X, _),
+    \+ member(X, Visitadas),
+    write(' -> '),
+    write(X),
+    buscarAux(X, D, [X|Visitadas]).

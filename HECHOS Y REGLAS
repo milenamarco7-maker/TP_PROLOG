@@ -1,0 +1,73 @@
+HECHOS Y REGLAS
+
+EJERCICIO 1
+par(0).
+par(N) :- 
+    N >= 2, 
+    N1 is N - 2,
+    par(N1).
+par(N) :- 
+    N < 0,   
+    M is -N,
+    par(M).
+
+EJERCICIO 2
+sumaP(0, 0).
+sumaP(N, S) :- 
+    N > 0, 
+    N1 is N - 1,
+    suma(N1, S1).
+    S is S1 + 2 * N.
+suma(N, S) :- sumaP(N, S).
+
+EJERCICIO 3
+potencia(_, 0, 1).
+potencia(B, E, V) :-
+    int(E),
+    E > 0,
+    E1 is -E,
+    potencia(B, E1, V1),
+    V is V1 * B.
+
+EJERCICIO 4
+
+fibonacci(0, 0).
+fibonacci(1 , 1).
+fibonacci(N, R) :- 
+    N > 1,
+    N1 is N - 1,
+    N2 is N - 2, 
+    fibonacci(N1, R1),
+    fibonacci(N2, R2),
+    R is R1 + R2.
+
+EJERCICIO 5
+and(Q1, Q2, S).
+or(Q1, Q2, S). 
+not(Q, S). 
+circuito(Q1, Q2, S). 
+
+and(1, 1, 1). and(1, 0, 0). and(0, 1, 0). and(0, 0, 0).
+or(0, 0, 0). or(0, 0, 1). or(0, 1, 0). or(1, 1, 1).
+not(0, 1). not(1, 0).
+
+circuito(Q21, Q2, S) :-
+    (Q1, NQ1), (Q2, NQ2), and(NQ1, Q2, R1), and(NQ2, Q1, R2), or(R1, R2, RF).
+
+EJERCICIO 6
+sintoma(laura, tos).
+sintoma(laura, dolorCabeza).
+sintoma(pablo, congestion).
+sintoma(pablo, dolorGarganta).
+
+enfermedad(gripe, tos).
+enfermedad(gripe, dolorCabeza).
+enfermedad(gripe, dolorGarganta).
+enfermedad(gripe, congestion).
+enfermedad(bronquitis, congestion).
+enfermedad(bronquitis, dolorGarganta).
+enfermedad(bronquitis, tos).
+
+dianostico(P, S, E):-
+    sintoma(P, S),
+    enfermedad(E, S).
